@@ -1,0 +1,173 @@
+# Hanuman Chalisa Official — Website/WebApp
+
+A modern, premium website dedicated to Lord Hanuman, designed to attract **young professionals and students** by blending ancient spiritual wisdom with a contemporary digital experience. Integrates with the YouTube channel "Hanuman Chalisa Official" and its 108-day Hanuman Chalisa series.
+
+## User Review Required
+
+> [!IMPORTANT]
+> **YouTube Channel Link Needed:** Please share your exact YouTube channel URL and/or the 108-day playlist URL so I can embed the correct videos. I'll use placeholder links for now.
+
+> [!IMPORTANT]
+> **Domain / Hosting:** This will be a static site (Vite + React) that can be deployed to Vercel, Netlify, or any static host. Let me know if you have a preferred domain or hosting platform.
+
+> [!NOTE]
+> **No Backend Required:** All tools (streak tracker, chanting counter, bookmarks) use browser `localStorage`, so no database or server is needed. The site is fully self-contained.
+
+---
+
+## Design Philosophy
+
+| Aspect | Approach |
+|---|---|
+| **Theme** | Dark mode primary with **saffron/orange (#FF6B00, #FF9933)** accent — Hanuman's sacred color |
+| **Typography** | Google Fonts: **Outfit** (headings) + **Inter** (body) — clean, modern, premium |
+| **Visual Style** | Glassmorphism cards, subtle particle effects, smooth scroll animations |
+| **Layout** | Mobile-first, single-page app with section-based navigation |
+| **Imagery** | AI-generated Hanuman artwork in a modern illustrative style |
+| **Tone** | Empowering, not preachy — "spirituality as a superpower for modern life" |
+
+---
+
+## Proposed Changes
+
+### Project Setup
+
+#### [NEW] [vite.config.js](file:///c:/Users/gamer/Documents/Hanuman%20Chalisa%20Ofiicial/vite.config.js)
+- Initialize Vite + React project with JavaScript
+
+#### [NEW] [index.html](file:///c:/Users/gamer/Documents/Hanuman%20Chalisa%20Ofiicial/index.html)
+- Root HTML with SEO meta tags, Open Graph tags, Google Fonts
+
+---
+
+### Design System
+
+#### [NEW] [src/index.css](file:///c:/Users/gamer/Documents/Hanuman%20Chalisa%20Ofiicial/src/index.css)
+- CSS custom properties for the full design system
+- Dark theme with saffron accents
+- Glassmorphism utility classes
+- Animation keyframes
+- Responsive breakpoints
+- Typography scale
+
+---
+
+### Core Application
+
+#### [NEW] [src/App.jsx](file:///c:/Users/gamer/Documents/Hanuman%20Chalisa%20Ofiicial/src/App.jsx)
+- Main app shell with navigation and section routing
+- Smooth scroll between sections
+
+#### [NEW] [src/main.jsx](file:///c:/Users/gamer/Documents/Hanuman%20Chalisa%20Ofiicial/src/main.jsx)
+- React entry point
+
+---
+
+### Page Sections & Components
+
+#### [NEW] [src/components/Navbar.jsx](file:///c:/Users/gamer/Documents/Hanuman%20Chalisa%20Ofiicial/src/components/Navbar.jsx)
+- Sticky glassmorphism navbar with logo and section links
+- Mobile hamburger menu
+- Scroll-aware active state highlighting
+
+#### [NEW] [src/components/Hero.jsx](file:///c:/Users/gamer/Documents/Hanuman%20Chalisa%20Ofiicial/src/components/Hero.jsx)
+- Full-viewport cinematic hero with Hanuman imagery
+- Animated tagline: *"Unleash Your Inner Strength"*
+- CTA buttons → YouTube channel + Explore
+- Floating particle/glow effects
+
+#### [NEW] [src/components/JourneySection.jsx](file:///c:/Users/gamer/Documents/Hanuman%20Chalisa%20Ofiicial/src/components/JourneySection.jsx)
+- **108-Day Chalisa Journey** — YouTube video embeds
+- Visual timeline/grid of all 108 days
+- Filter by day number, search
+- Progress tracker (mark days completed)
+
+#### [NEW] [src/components/VerseExplorer.jsx](file:///c:/Users/gamer/Documents/Hanuman%20Chalisa%20Ofiicial/src/components/VerseExplorer.jsx)
+- Interactive Hanuman Chalisa text — all 40 verses
+- Each verse shows: **Hindi text → Transliteration → English meaning**
+- Click to expand verse with deeper interpretation
+- Bookmark verses (saved to localStorage)
+- Copy & share individual verses
+
+#### [NEW] [src/components/DailyWisdom.jsx](file:///c:/Users/gamer/Documents/Hanuman%20Chalisa%20Ofiicial/src/components/DailyWisdom.jsx)
+- Today's verse (rotates daily based on date)
+- Modern interpretation for young professionals
+- Shareable quote card with beautiful design
+- "Apply this today" practical tip
+
+#### [NEW] [src/components/ChantingTool.jsx](file:///c:/Users/gamer/Documents/Hanuman%20Chalisa%20Ofiicial/src/components/ChantingTool.jsx)
+- **Mala Counter** — tap to count each recitation (up to 108)
+- Visual progress ring animation
+- Sound/vibration feedback on each tap
+- Session history saved to localStorage
+- **Streak Tracker** — calendar heatmap showing daily chanting streaks
+- Motivational milestones (7-day, 21-day, 40-day, 108-day)
+
+#### [NEW] [src/components/KnowledgeHub.jsx](file:///c:/Users/gamer/Documents/Hanuman%20Chalisa%20Ofiicial/src/components/KnowledgeHub.jsx)
+- Curated articles on Hanuman's teachings for modern life:
+  - *"5 Leadership Lessons from Hanuman"*
+  - *"How Hanuman Chalisa Builds Mental Resilience"*
+  - *"Discipline & Devotion: A Student's Guide"*
+  - *"Overcoming Fear: Hanuman's Message for Young Professionals"*
+  - *"The Science Behind Chanting: What Research Says"*
+- Card-based layout with read-more expansion
+
+#### [NEW] [src/components/AboutChannel.jsx](file:///c:/Users/gamer/Documents/Hanuman%20Chalisa%20Ofiicial/src/components/AboutChannel.jsx)
+- Channel story and mission
+- YouTube subscribe button embed
+- Social links
+- 108-day challenge stats/highlights
+
+#### [NEW] [src/components/Footer.jsx](file:///c:/Users/gamer/Documents/Hanuman%20Chalisa%20Ofiicial/src/components/Footer.jsx)
+- Minimal footer with links, copyright, social icons
+
+---
+
+### Data
+
+#### [NEW] [src/data/verses.js](file:///c:/Users/gamer/Documents/Hanuman%20Chalisa%20Ofiicial/src/data/verses.js)
+- All 40 Hanuman Chalisa verses with Hindi text, transliteration, English meaning, and modern interpretation
+
+#### [NEW] [src/data/articles.js](file:///c:/Users/gamer/Documents/Hanuman%20Chalisa%20Ofiicial/src/data/articles.js)
+- Knowledge Hub article content
+
+---
+
+### Assets
+
+- AI-generated Hanuman hero artwork (modern illustrative style)
+- Favicon and Open Graph image
+
+---
+
+## Key Value Propositions for Visitors
+
+| Tool / Feature | Value |
+|---|---|
+| 🧘 **Mala Counter** | Track chanting with a beautiful digital mala — no physical mala needed |
+| 🔥 **Streak Tracker** | Gamified daily chanting habit — builds consistency |
+| 📖 **Verse Explorer** | Learn every verse's deep meaning — become a Hanuman Chalisa expert |
+| 💡 **Daily Wisdom** | One verse + modern lesson every day — quick daily inspiration |
+| 📚 **Knowledge Hub** | Articles connecting Hanuman's teachings to career, exams, mental health |
+| 🎬 **108-Day Journey** | Watch the full series with progress tracking |
+
+---
+
+## Verification Plan
+
+### Automated Tests
+- `npm run build` — verify production build completes without errors
+
+### Browser Testing (via browser tool)
+1. Open the dev server at `http://localhost:5173`
+2. Verify all sections render correctly
+3. Test Mala Counter (click counter, check localStorage persistence)
+4. Test Streak Tracker (verify calendar renders, streak increments)
+5. Test Verse Explorer (expand verse, bookmark, verify localStorage)
+6. Test responsive layout at mobile viewport (375px)
+7. Test navigation and smooth scrolling
+8. Verify YouTube embeds load
+
+### Manual Verification
+- User reviews the design and provides feedback on aesthetics
+- User verifies YouTube links are correct once provided

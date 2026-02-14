@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0a0a0f"/>
+      <stop offset="100%" style="stop-color:#1a1a24"/>
+    </linearGradient>
+    <linearGradient id="saffronGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#FF6B00"/>
+      <stop offset="100%" style="stop-color:#FF9933"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" style="stop-color:rgba(255,107,0,0.3)"/>
+      <stop offset="100%" style="stop-color:transparent"/>
+    </radialGradient>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="1200" height="630" fill="url(#bgGrad)"/>
+  
+  <!-- Decorative glow -->
+  <circle cx="600" cy="315" r="300" fill="url(#glow)"/>
+  
+  <!-- Main Content Group -->
+  <g transform="translate(600, 280)">
+    <!-- Om Symbol -->
+    <text x="0" y="-80" text-anchor="middle" font-size="80" fill="#FF9933" font-family="serif">🙏</text>
+    
+    <!-- Badge -->
+    <rect x="-140" y="-40" width="280" height="36" rx="18" fill="rgba(255,107,0,0.15)" stroke="rgba(255,153,51,0.3)" stroke-width="1"/>
+    <text x="0" y="-16" text-anchor="middle" font-size="16" fill="#FF9933" font-family="Inter, sans-serif" font-weight="500">🔥 108-Day Hanuman Chalisa Challenge</text>
+    
+    <!-- Main Title -->
+    <text x="0" y="40" text-anchor="middle" font-size="72" fill="#f0ece4" font-family="Outfit, sans-serif" font-weight="800">Hanuman Chalisa</text>
+    <text x="0" y="110" text-anchor="middle" font-size="72" fill="url(#saffronGrad)" font-family="Outfit, sans-serif" font-weight="800">Official</text>
+    
+    <!-- Subtitle -->
+    <text x="0" y="170" text-anchor="middle" font-size="24" fill="#a09b90" font-family="Inter, sans-serif">Unleash Your Inner Strength • Daily Wisdom • Chanting Tools</text>
+  </g>
+  
+  <!-- Bottom decorative line -->
+  <rect x="400" y="580" width="400" height="3" rx="1.5" fill="url(#saffronGrad)"/>
+</svg>

@@ -1,0 +1,32 @@
+# Hanuman Chalisa Official — Website Project
+
+## Planning
+- [/] Research YouTube channel and design inspiration
+- [/] Create implementation plan
+- [ ] Get user approval on plan
+
+## Project Setup
+- [ ] Initialize Vite + React project
+- [ ] Set up project structure and design system (fonts, colors, CSS)
+
+## Core Pages & Components
+- [ ] **Hero / Landing Section** — cinematic intro with Hanuman imagery, tagline, CTA
+- [ ] **108-Day Chalisa Journey** — YouTube playlist embed with day tracker
+- [ ] **Verse Explorer** — Interactive Hanuman Chalisa with meaning, transliteration & audio
+- [ ] **Daily Wisdom** — Daily verse + motivational teaching for modern life
+- [ ] **Streak Tracker** — Personal chanting streak counter (localStorage)
+- [ ] **Knowledge Hub** — Articles: Hanuman's lessons for career, courage, discipline
+- [ ] **About / Channel** — Channel story, mission, subscribe CTA
+- [ ] **Navigation & Footer**
+
+## Value-Added Tools
+- [ ] Chanting counter with sound/vibration feedback
+- [ ] Daily streak tracker with calendar heatmap
+- [ ] Bookmarkable verses with notes
+- [ ] Shareable wisdom cards (quote images)
+
+## Polish & Verification
+- [ ] Responsive design (mobile-first)
+- [ ] Animations and micro-interactions
+- [ ] Browser testing & verification
+- [ ] Performance optimization
