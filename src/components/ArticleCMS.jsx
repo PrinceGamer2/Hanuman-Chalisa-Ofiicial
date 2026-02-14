@@ -398,15 +398,6 @@ export default function ArticleCMS() {
                             Login
                         </button>
                     </form>
-
-                    <p style={{
-                        textAlign: 'center',
-                        marginTop: '1.5rem',
-                        fontSize: '0.8rem',
-                        color: 'var(--color-text-muted)'
-                    }}>
-                        Default password: hanuman123
-                    </p>
                 </div>
             </div>
         )

@@ -96,22 +96,6 @@ export default function KnowledgeHub() {
                     ))}
                 </div>
 
-                {/* Admin Link */}
-                <div style={{
-                    textAlign: 'center',
-                    marginTop: '2rem'
-                }}>
-                    <a 
-                        href="#admin" 
-                        style={{
-                            fontSize: '0.8rem',
-                            color: 'var(--color-text-muted)',
-                            textDecoration: 'underline'
-                        }}
-                    >
-                        Admin Access
-                    </a>
-                </div>
             </div>
 
             {/* Article Modal */}
