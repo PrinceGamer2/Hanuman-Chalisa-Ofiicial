@@ -20,9 +20,24 @@ export default function Hero() {
         <section className="hero" id="home">
             <div className="hero__bg"></div>
             <div className={`hero__content ${isVisible ? 'animate-in' : ''}`}>
-                <div className="hero__om" style={{
-                    animationDelay: '0.1s'
-                }}>🙏</div>
+                {/* Channel Profile Image */}
+                <div style={{
+                    animationDelay: '0.1s',
+                    marginBottom: '1.5rem'
+                }}>
+                    <img 
+                        src="https://yt3.googleusercontent.com/ONfGFRFCKU_GRz_E9JcRsD_1dME2pFDafdb2OgKisVkN-TMtpwUWgJ6mCTwCzbxqCIJY4rtZiQ=s160-c-k-c0x00ffffff-no-rj"
+                        alt="Hanuman Chalisa Official Channel"
+                        style={{
+                            width: '120px',
+                            height: '120px',
+                            borderRadius: '50%',
+                            border: '4px solid var(--color-saffron)',
+                            boxShadow: '0 0 30px rgba(255, 107, 0, 0.4)',
+                            objectFit: 'cover'
+                        }}
+                    />
+                </div>
 
                 <div className="hero__badge" style={{
                     animationDelay: '0.2s'
