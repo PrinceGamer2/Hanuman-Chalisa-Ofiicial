@@ -160,17 +160,6 @@ export default function Navbar() {
                     transition: 'transform 0.3s ease'
                 }}
             >
-                <button 
-                    className="navbar__mobile-close" 
-                    onClick={() => setMobileOpen(false)} 
-                    aria-label="Close menu"
-                    style={{
-                        touchAction: 'manipulation',
-                        WebkitTapHighlightColor: 'transparent'
-                    }}
-                >
-                    ✕
-                </button>
                 {NAV_ITEMS.map(item => (
                     <a 
                         key={item.href} 

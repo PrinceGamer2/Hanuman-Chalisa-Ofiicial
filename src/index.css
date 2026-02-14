@@ -373,32 +373,6 @@ button {
   color: var(--color-text-primary);
 }
 
-.navbar__mobile-close {
-  position: absolute;
-  top: var(--space-xl);
-  right: var(--space-xl);
-  background: none;
-  font-size: 2rem;
-  color: var(--color-text-primary);
-  cursor: pointer;
-  padding: var(--space-sm);
-  min-width: 48px;
-  min-height: 48px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: var(--radius-full);
-  transition: all var(--transition-fast);
-}
-
-.navbar__mobile-close:hover {
-  background: rgba(255, 255, 255, 0.1);
-}
-
-.navbar__mobile-close:active {
-  transform: scale(0.95);
-}
-
 /* ===== HERO ===== */
 .hero {
   min-height: 100vh;
