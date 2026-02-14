@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useRef } from 'react'
 
 const MILESTONES = [
     { days: 7, icon: '🌱', label: 'Seedling' },
@@ -63,7 +63,7 @@ function getLast28Days() {
     for (let i = 0; i < 35; i++) {
         const d = new Date(start)
         d.setDate(d.getDate() + i)
-        if (d > today) break // Removed the condition to stop before today
+        if (d > today) break
         days.push(d.toISOString().slice(0, 10))
     }
     return days
@@ -73,15 +73,26 @@ export default function ChantingTool() {
     const [tab, setTab] = useState('mala')
     const [count, setCount] = useState(0)
     const [streakData, setStreakData] = useState(getStreakData)
+    const [isPressed, setIsPressed] = useState(false)
+    const tapButtonRef = useRef(null)
 
-    // Mala counter
+    // Mala counter with enhanced feedback
     const handleTap = useCallback(() => {
         if (count >= 108) return
         const newCount = count + 1
         setCount(newCount)
 
-        // Vibrate on mobile
-        if (navigator.vibrate) navigator.vibrate(30)
+        // Enhanced haptic feedback
+        if (navigator.vibrate) {
+            // Pattern: short for regular, longer for milestones
+            if (newCount === 108) {
+                navigator.vibrate([50, 100, 50, 100, 200])
+            } else if (newCount % 27 === 0) {
+                navigator.vibrate([50, 50, 100])
+            } else {
+                navigator.vibrate(25)
+            }
+        }
 
         // Save to streak when completing 108
         if (newCount === 108) {
@@ -92,7 +103,47 @@ export default function ChantingTool() {
         }
     }, [count, streakData])
 
-    const resetMala = () => setCount(0)
+    // Handle keyboard support (spacebar to count)
+    useEffect(() => {
+        const handleKeyDown = (e) => {
+            if (tab !== 'mala') return
+            if (e.code === 'Space' && !e.repeat && count < 108) {
+                e.preventDefault()
+                handleTap()
+                setIsPressed(true)
+            }
+        }
+
+        const handleKeyUp = (e) => {
+            if (e.code === 'Space') {
+                setIsPressed(false)
+            }
+        }
+
+        window.addEventListener('keydown', handleKeyDown)
+        window.addEventListener('keyup', handleKeyUp)
+        return () => {
+            window.removeEventListener('keydown', handleKeyDown)
+            window.removeEventListener('keyup', handleKeyUp)
+        }
+    }, [tab, count, handleTap])
+
+    // Handle touch events for better mobile experience
+    const handleTouchStart = (e) => {
+        e.preventDefault()
+        setIsPressed(true)
+        handleTap()
+    }
+
+    const handleTouchEnd = () => {
+        setIsPressed(false)
+    }
+
+    const resetMala = () => {
+        if (confirm('Reset your mala counter?')) {
+            setCount(0)
+        }
+    }
 
     const circumference = 2 * Math.PI * 108
     const offset = circumference - (count / 108) * circumference
@@ -101,6 +152,9 @@ export default function ChantingTool() {
     const bestStreak = getBestStreak(streakData)
     const calendarDays = getLast28Days()
     const todayKey = getTodayKey()
+
+    // Calculate progress percentage
+    const progressPercent = Math.round((count / 108) * 100)
 
     return (
         <section className="section chanting" id="practice">
@@ -115,12 +169,14 @@ export default function ChantingTool() {
                     <button
                         className={`chanting__tab ${tab === 'mala' ? 'active' : ''}`}
                         onClick={() => setTab('mala')}
+                        aria-pressed={tab === 'mala'}
                     >
                         🧿 Mala Counter
                     </button>
                     <button
                         className={`chanting__tab ${tab === 'streak' ? 'active' : ''}`}
                         onClick={() => setTab('streak')}
+                        aria-pressed={tab === 'streak'}
                     >
                         🔥 Streak Tracker
                     </button>
@@ -142,23 +198,99 @@ export default function ChantingTool() {
                                     cx="120" cy="120" r="108"
                                     strokeDasharray={circumference}
                                     strokeDashoffset={offset}
+                                    style={{
+                                        filter: count === 108 ? 'drop-shadow(0 0 10px rgba(255, 215, 0, 0.5))' : 'none'
+                                    }}
                                 />
                             </svg>
                             <div className="mala__count">
                                 <div className="mala__count-number">{count}</div>
                                 <div className="mala__count-label">of 108</div>
+                                <div className="mala__count-percent" style={{
+                                    fontSize: '0.75rem',
+                                    color: 'var(--color-text-muted)',
+                                    marginTop: '4px'
+                                }}>
+                                    {progressPercent}%
+                                </div>
                             </div>
                         </div>
 
+                        {/* Progress milestones */}
+                        <div style={{
+                            display: 'flex',
+                            justifyContent: 'center',
+                            gap: '8px',
+                            marginBottom: 'var(--space-lg)',
+                            flexWrap: 'wrap'
+                        }}>
+                            {[27, 54, 81, 108].map(milestone => (
+                                <div
+                                    key={milestone}
+                                    style={{
+                                        padding: '4px 10px',
+                                        borderRadius: '12px',
+                                        fontSize: '0.7rem',
+                                        fontWeight: 600,
+                                        background: count >= milestone 
+                                            ? 'linear-gradient(135deg, var(--color-saffron), var(--color-saffron-light))' 
+                                            : 'var(--color-bg-card)',
+                                        color: count >= milestone ? 'white' : 'var(--color-text-muted)',
+                                        border: `1px solid ${count >= milestone ? 'transparent' : 'var(--color-border)'}`,
+                                        transition: 'all 0.3s ease'
+                                    }}
+                                >
+                                    {milestone === 108 ? '🏆 Complete' : `${milestone} beads`}
+                                </div>
+                            ))}
+                        </div>
+
                         <button
-                            className={`mala__tap-btn ${count >= 108 ? 'complete' : ''}`}
+                            ref={tapButtonRef}
+                            className={`mala__tap-btn ${count >= 108 ? 'complete' : ''} ${isPressed ? 'pressed' : ''}`}
                             onClick={handleTap}
+                            onTouchStart={handleTouchStart}
+                            onTouchEnd={handleTouchEnd}
                             disabled={count >= 108}
+                            aria-label={count >= 108 ? 'Complete' : `Tap to count. Current count: ${count} of 108`}
+                            style={{
+                                transform: isPressed ? 'scale(0.95)' : 'scale(1)',
+                                touchAction: 'manipulation',
+                                WebkitTapHighlightColor: 'transparent',
+                                userSelect: 'none',
+                                WebkitUserSelect: 'none'
+                            }}
                         >
-                            {count >= 108 ? '🙏 Complete! Jai Hanuman!' : '🙏 Tap to Count'}
+                            {count >= 108 ? (
+                                <>
+                                    <span style={{ fontSize: '1.5rem', display: 'block', marginBottom: '8px' }}>🙏</span>
+                                    Complete! Jai Hanuman!
+                                </>
+                            ) : (
+                                <>
+                                    <span style={{ fontSize: '1.3rem', display: 'block', marginBottom: '4px' }}>🙏</span>
+                                    Tap to Count
+                                    <span style={{ 
+                                        display: 'block', 
+                                        fontSize: '0.75rem', 
+                                        opacity: 0.8,
+                                        marginTop: '4px',
+                                        fontWeight: 400
+                                    }}>
+                                        (or press Space)
+                                    </span>
+                                </>
+                            )}
                         </button>
 
-                        <button className="mala__reset" onClick={resetMala}>
+                        <button 
+                            className="mala__reset" 
+                            onClick={resetMala}
+                            style={{
+                                touchAction: 'manipulation',
+                                WebkitTapHighlightColor: 'transparent'
+                            }}
+                        >
                             ↻ Reset Counter
                         </button>
                     </div>
@@ -185,6 +317,10 @@ export default function ChantingTool() {
                                     key={day}
                                     className={`streak__day ${streakData[day] ? 'active' : ''} ${day === todayKey ? 'today' : ''}`}
                                     title={`${day}${streakData[day] ? ` — ${streakData[day]} recitation(s)` : ''}`}
+                                    style={{
+                                        touchAction: 'manipulation',
+                                        WebkitTapHighlightColor: 'transparent'
+                                    }}
                                 >
                                     {new Date(day).getDate()}
                                 </div>
@@ -196,6 +332,11 @@ export default function ChantingTool() {
                                 <div
                                     key={m.days}
                                     className={`streak__milestone ${currentStreak >= m.days ? 'achieved' : ''}`}
+                                    style={{
+                                        opacity: currentStreak >= m.days ? 1 : 0.5,
+                                        transform: currentStreak >= m.days ? 'scale(1.02)' : 'scale(1)',
+                                        transition: 'all 0.3s ease'
+                                    }}
                                 >
                                     <div className="streak__milestone-icon">{m.icon}</div>
                                     <div className="streak__milestone-days">{m.days} Days</div>
@@ -208,9 +349,14 @@ export default function ChantingTool() {
                             fontSize: '0.85rem',
                             color: 'var(--color-text-muted)',
                             marginTop: 'var(--space-lg)',
-                            textAlign: 'center'
+                            textAlign: 'center',
+                            lineHeight: 1.6
                         }}>
                             Complete 108 counts on the Mala Counter to mark today's streak ✨
+                            <br />
+                            <span style={{ fontSize: '0.75rem', opacity: 0.8 }}>
+                                Every day you chant builds your inner strength
+                            </span>
                         </p>
                     </div>
                 )}

@@ -1,27 +1,62 @@
+import { useEffect, useState } from 'react'
+
 export default function Hero() {
+    const [isVisible, setIsVisible] = useState(false)
+
+    useEffect(() => {
+        // Trigger animation after mount
+        setIsVisible(true)
+    }, [])
+
+    const scrollToSection = (e, sectionId) => {
+        e.preventDefault()
+        const element = document.getElementById(sectionId)
+        if (element) {
+            element.scrollIntoView({ behavior: 'smooth' })
+        }
+    }
+
     return (
         <section className="hero" id="home">
             <div className="hero__bg"></div>
-            <div className="hero__content">
-                <div className="hero__om">🙏</div>
+            <div className={`hero__content ${isVisible ? 'animate-in' : ''}`}>
+                <div className="hero__om" style={{
+                    animationDelay: '0.1s'
+                }}>🙏</div>
 
-                <div className="hero__badge">
-                    🔥 108-Day Hanuman Chalisa Challenge — Watch on YouTube
+                <div className="hero__badge" style={{
+                    animationDelay: '0.2s'
+                }}>
+                    🔥 108-Day Hanuman Chalisa Challenge
                 </div>
 
-                <h1 className="hero__title">
+                <h1 className="hero__title" style={{
+                    animationDelay: '0.3s'
+                }}>
                     Unleash Your <br />
                     <span>Inner Strength</span>
                 </h1>
 
-                <p className="hero__subtitle">
+                <p className="hero__subtitle" style={{
+                    animationDelay: '0.4s'
+                }}>
                     Discover the timeless power of Hanuman Chalisa — verse-by-verse wisdom,
                     daily chanting tools, and life lessons for the modern seeker.
                     Your spiritual superpower starts here.
                 </p>
 
-                <div className="hero__actions">
-                    <a href="#chalisa" className="btn btn--primary">
+                <div className="hero__actions" style={{
+                    animationDelay: '0.5s'
+                }}>
+                    <a 
+                        href="#chalisa" 
+                        className="btn btn--primary"
+                        onClick={(e) => scrollToSection(e, 'chalisa')}
+                        style={{
+                            touchAction: 'manipulation',
+                            WebkitTapHighlightColor: 'transparent'
+                        }}
+                    >
                         📖 Explore the Chalisa
                     </a>
                     <a
@@ -29,12 +64,18 @@ export default function Hero() {
                         target="_blank"
                         rel="noopener noreferrer"
                         className="btn btn--outline"
+                        style={{
+                            touchAction: 'manipulation',
+                            WebkitTapHighlightColor: 'transparent'
+                        }}
                     >
                         ▶ Watch 108-Day Series
                     </a>
                 </div>
 
-                <div className="hero__stats">
+                <div className="hero__stats" style={{
+                    animationDelay: '0.6s'
+                }}>
                     <div className="hero__stat">
                         <div className="hero__stat-number">108</div>
                         <div className="hero__stat-label">Days of Chanting</div>

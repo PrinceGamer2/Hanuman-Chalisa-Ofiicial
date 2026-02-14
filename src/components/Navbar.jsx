@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 
 const NAV_ITEMS = [
     { label: 'Home', href: '#home' },
@@ -14,6 +14,11 @@ export default function Navbar() {
     const [scrolled, setScrolled] = useState(false)
     const [mobileOpen, setMobileOpen] = useState(false)
     const [activeSection, setActiveSection] = useState('#home')
+    const [touchStart, setTouchStart] = useState(null)
+    const [touchEnd, setTouchEnd] = useState(null)
+
+    // Minimum swipe distance to close menu
+    const minSwipeDistance = 50
 
     useEffect(() => {
         const handleScroll = () => {
@@ -32,10 +37,56 @@ export default function Navbar() {
         return () => window.removeEventListener('scroll', handleScroll)
     }, [])
 
+    // Prevent body scroll when mobile menu is open
+    useEffect(() => {
+        if (mobileOpen) {
+            document.body.style.overflow = 'hidden'
+            document.body.style.touchAction = 'none'
+        } else {
+            document.body.style.overflow = ''
+            document.body.style.touchAction = ''
+        }
+        return () => {
+            document.body.style.overflow = ''
+            document.body.style.touchAction = ''
+        }
+    }, [mobileOpen])
+
+    // Handle escape key to close menu
+    useEffect(() => {
+        const handleEscape = (e) => {
+            if (e.key === 'Escape' && mobileOpen) {
+                setMobileOpen(false)
+            }
+        }
+        window.addEventListener('keydown', handleEscape)
+        return () => window.removeEventListener('keydown', handleEscape)
+    }, [mobileOpen])
+
     const handleClick = (href) => {
         setMobileOpen(false)
         setActiveSection(href)
     }
+
+    // Touch handlers for swipe to close
+    const onTouchStart = useCallback((e) => {
+        setTouchEnd(null)
+        setTouchStart(e.targetTouches[0].clientX)
+    }, [])
+
+    const onTouchMove = useCallback((e) => {
+        setTouchEnd(e.targetTouches[0].clientX)
+    }, [])
+
+    const onTouchEnd = useCallback(() => {
+        if (!touchStart || !touchEnd) return
+        const distance = touchStart - touchEnd
+        const isLeftSwipe = distance > minSwipeDistance
+        // Swipe left to close menu
+        if (isLeftSwipe && mobileOpen) {
+            setMobileOpen(false)
+        }
+    }, [touchStart, touchEnd, mobileOpen])
 
     return (
         <>
@@ -70,7 +121,12 @@ export default function Navbar() {
                         ▶ Watch Series
                     </a>
 
-                    <button className="navbar__hamburger" onClick={() => setMobileOpen(true)} aria-label="Open menu">
+                    <button 
+                        className="navbar__hamburger" 
+                        onClick={() => setMobileOpen(true)} 
+                        aria-label="Open menu"
+                        aria-expanded={mobileOpen}
+                    >
                         <span></span>
                         <span></span>
                         <span></span>
@@ -78,11 +134,53 @@ export default function Navbar() {
                 </div>
             </nav>
 
+            {/* Mobile menu overlay */}
+            {mobileOpen && (
+                <div 
+                    className="navbar__overlay" 
+                    onClick={() => setMobileOpen(false)}
+                    style={{
+                        position: 'fixed',
+                        inset: 0,
+                        background: 'rgba(0,0,0,0.5)',
+                        zIndex: 998,
+                        animation: 'fadeIn 0.2s ease'
+                    }}
+                />
+            )}
+
             {/* Mobile menu */}
-            <div className={`navbar__mobile ${mobileOpen ? 'open' : ''}`}>
-                <button className="navbar__mobile-close" onClick={() => setMobileOpen(false)} aria-label="Close menu">✕</button>
+            <div 
+                className={`navbar__mobile ${mobileOpen ? 'open' : ''}`}
+                onTouchStart={onTouchStart}
+                onTouchMove={onTouchMove}
+                onTouchEnd={onTouchEnd}
+                style={{
+                    transform: mobileOpen ? 'translateX(0)' : 'translateX(100%)',
+                    transition: 'transform 0.3s ease'
+                }}
+            >
+                <button 
+                    className="navbar__mobile-close" 
+                    onClick={() => setMobileOpen(false)} 
+                    aria-label="Close menu"
+                    style={{
+                        touchAction: 'manipulation',
+                        WebkitTapHighlightColor: 'transparent'
+                    }}
+                >
+                    ✕
+                </button>
                 {NAV_ITEMS.map(item => (
-                    <a key={item.href} href={item.href} onClick={() => handleClick(item.href)}>
+                    <a 
+                        key={item.href} 
+                        href={item.href} 
+                        onClick={() => handleClick(item.href)}
+                        style={{
+                            touchAction: 'manipulation',
+                            WebkitTapHighlightColor: 'transparent'
+                        }}
+                    >
                         {item.label}
                     </a>
                 ))}
@@ -91,6 +189,10 @@ export default function Navbar() {
                     target="_blank"
                     rel="noopener noreferrer"
                     className="btn btn--primary"
+                    style={{
+                        touchAction: 'manipulation',
+                        WebkitTapHighlightColor: 'transparent'
+                    }}
                 >
                     ▶ Watch Full Series
                 </a>
