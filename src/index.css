@@ -193,33 +193,42 @@ button {
 
 .btn--primary {
   background: linear-gradient(135deg, var(--color-saffron), var(--color-saffron-light));
-  color: #fff;
+  color: #fff !important;
   box-shadow: 0 4px 20px var(--color-saffron-glow);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .btn--primary:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 30px var(--color-saffron-glow);
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: 0 8px 35px var(--color-saffron-glow);
+  filter: brightness(1.1);
 }
 
 .btn--outline {
   background: transparent;
-  color: var(--color-saffron-light);
+  color: var(--color-saffron-light) !important;
   border: 1.5px solid var(--color-border-hover);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .btn--outline:hover {
   background: var(--color-saffron-subtle);
   border-color: var(--color-saffron-light);
+  color: #fff !important;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 20px var(--color-saffron-glow);
 }
 
 .btn--ghost {
   background: rgba(255, 255, 255, 0.05);
-  color: var(--color-text-primary);
+  color: var(--color-text-primary) !important;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .btn--ghost:hover {
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.15);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(255, 255, 255, 0.1);
 }
 
 /* --- Hindi / Devanagari Text --- */
