@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { articles as staticArticles } from '../data/articles'
 
 // Admin password - you should change this!
 const ADMIN_PASSWORD = 'hanuman123'
@@ -65,17 +66,45 @@ The practice of daily chanting builds willpower and consistency—foundational s
     }
 ]
 
-// Load articles from localStorage or use initial
+// Convert static article format to CMS format
+function convertStaticToCMS(staticArticle) {
+    return {
+        id: `static-${staticArticle.id}`,
+        title: staticArticle.title,
+        category: staticArticle.category,
+        emoji: staticArticle.emoji,
+        summary: staticArticle.summary,
+        content: staticArticle.content,
+        author: 'Admin',
+        readTime: staticArticle.readTime,
+        date: new Date().toISOString(),
+        published: true,
+        isStatic: true // Mark as originally static
+    }
+}
+
+// Load articles - combine static and CMS
 function loadArticles() {
     try {
+        // Get static articles converted to CMS format
+        const convertedStatic = staticArticles.map(convertStaticToCMS)
+        
+        // Get CMS articles from localStorage
         const stored = localStorage.getItem(STORAGE_KEY_ARTICLES)
+        let cmsArticles = []
         if (stored) {
-            return JSON.parse(stored)
+            cmsArticles = JSON.parse(stored)
+        } else {
+            // Use initial articles if nothing stored
+            cmsArticles = initialArticles
         }
+        
+        // Combine: CMS articles first, then static
+        return [...cmsArticles, ...convertedStatic]
     } catch (e) {
         console.error('Error loading articles:', e)
+        return initialArticles
     }
-    return initialArticles
 }
 
 // Save articles to localStorage
@@ -207,12 +236,25 @@ export default function ArticleCMS() {
         let newArticles
         
         if (editingArticle) {
-            // Update existing
-            newArticles = articles.map(a => 
-                a.id === editingArticle.id 
-                    ? { ...a, ...formData, date: now }
-                    : a
-            )
+            // Check if editing a static article
+            if (editingArticle.isStatic) {
+                // Convert to CMS article by creating new with new ID
+                const newArticle = {
+                    id: Date.now().toString(),
+                    ...formData,
+                    date: now,
+                    isStatic: false
+                }
+                // Add to beginning of articles list
+                newArticles = [newArticle, ...articles.filter(a => a.id !== editingArticle.id)]
+            } else {
+                // Update existing CMS article
+                newArticles = articles.map(a => 
+                    a.id === editingArticle.id 
+                        ? { ...a, ...formData, date: now }
+                        : a
+                )
+            }
         } else {
             // Create new
             const newArticle = {
@@ -223,7 +265,9 @@ export default function ArticleCMS() {
             newArticles = [newArticle, ...articles]
         }
         
-        if (saveArticles(newArticles)) {
+        // Save only CMS articles (filter out static)
+        const cmsArticlesOnly = newArticles.filter(a => !a.isStatic)
+        if (saveArticles(cmsArticlesOnly)) {
             setArticles(newArticles)
             setIsCreating(false)
             setEditingArticle(null)
@@ -234,7 +278,9 @@ export default function ArticleCMS() {
 
     const handleDelete = (articleId) => {
         const newArticles = articles.filter(a => a.id !== articleId)
-        if (saveArticles(newArticles)) {
+        // Save only CMS articles (filter out static)
+        const cmsArticlesOnly = newArticles.filter(a => !a.isStatic)
+        if (saveArticles(cmsArticlesOnly)) {
             setArticles(newArticles)
             setShowDeleteConfirm(null)
             setSaveMessage('Article deleted!')
@@ -243,10 +289,15 @@ export default function ArticleCMS() {
     }
 
     const handleTogglePublish = (article) => {
+        // Can't toggle publish on static articles
+        if (article.isStatic) return
+        
         const newArticles = articles.map(a =>
             a.id === article.id ? { ...a, published: !a.published } : a
         )
-        if (saveArticles(newArticles)) {
+        // Save only CMS articles
+        const cmsArticlesOnly = newArticles.filter(a => !a.isStatic)
+        if (saveArticles(cmsArticlesOnly)) {
             setArticles(newArticles)
         }
     }
@@ -689,7 +740,7 @@ Press Enter twice for new paragraphs.`}
                             key={article.id}
                             style={{
                                 background: 'var(--color-bg-secondary)',
-                                border: `1px solid ${article.published ? 'var(--color-border)' : 'rgba(255, 153, 51, 0.3)'}`,
+                                border: `1px solid ${article.isStatic ? 'rgba(68, 136, 255, 0.3)' : (article.published ? 'var(--color-border)' : 'rgba(255, 153, 51, 0.3)')}`,
                                 borderRadius: 'var(--radius-lg)',
                                 padding: '1.25rem',
                                 display: 'grid',
@@ -721,7 +772,18 @@ Press Enter twice for new paragraphs.`}
                                     }}>
                                         {article.category}
                                     </span>
-                                    {!article.published && (
+                                    {article.isStatic && (
+                                        <span style={{
+                                            fontSize: '0.75rem',
+                                            color: '#4488ff',
+                                            background: 'rgba(68, 136, 255, 0.15)',
+                                            padding: '2px 8px',
+                                            borderRadius: 'var(--radius-full)'
+                                        }}>
+                                            Built-in
+                                        </span>
+                                    )}
+                                    {!article.published && !article.isStatic && (
                                         <span style={{
                                             fontSize: '0.75rem',
                                             color: '#ffaa00',
@@ -760,30 +822,36 @@ Press Enter twice for new paragraphs.`}
                             }}>
                                 <button
                                     onClick={() => handleTogglePublish(article)}
+                                    disabled={article.isStatic}
                                     style={{
                                         ...styles.actionBtn,
                                         background: article.published ? 'rgba(0, 200, 0, 0.1)' : 'var(--color-saffron-subtle)',
-                                        color: article.published ? '#00cc00' : 'var(--color-saffron)'
+                                        color: article.published ? '#00cc00' : 'var(--color-saffron)',
+                                        opacity: article.isStatic ? 0.3 : 1,
+                                        cursor: article.isStatic ? 'not-allowed' : 'pointer'
                                     }}
-                                    title={article.published ? 'Unpublish' : 'Publish'}
+                                    title={article.isStatic ? 'Built-in articles cannot be unpublished' : (article.published ? 'Unpublish' : 'Publish')}
                                 >
                                     {article.published ? '👁' : '🚫'}
                                 </button>
                                 <button
                                     onClick={() => handleEdit(article)}
                                     style={styles.actionBtn}
-                                    title="Edit"
+                                    title={article.isStatic ? 'Edit (will create copy)' : 'Edit'}
                                 >
                                     ✏️
                                 </button>
                                 <button
-                                    onClick={() => setShowDeleteConfirm(article.id)}
+                                    onClick={() => !article.isStatic && setShowDeleteConfirm(article.id)}
+                                    disabled={article.isStatic}
                                     style={{
                                         ...styles.actionBtn,
                                         background: 'rgba(255, 0, 0, 0.1)',
-                                        color: '#ff4444'
+                                        color: '#ff4444',
+                                        opacity: article.isStatic ? 0.3 : 1,
+                                        cursor: article.isStatic ? 'not-allowed' : 'pointer'
                                     }}
-                                    title="Delete"
+                                    title={article.isStatic ? 'Built-in articles cannot be deleted' : 'Delete'}
                                 >
                                     🗑️
                                 </button>
