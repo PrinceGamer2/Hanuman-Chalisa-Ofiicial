@@ -93,7 +93,16 @@ export default function Navbar() {
             <nav className={`navbar ${scrolled ? 'navbar--scrolled' : ''}`}>
                 <div className="container navbar__inner">
                     <a href="#home" className="navbar__logo" onClick={() => handleClick('#home')}>
-                        <div className="navbar__logo-icon">🙏</div>
+                        <img 
+                            src="/logo.png" 
+                            alt="Hanuman Chalisa Official"
+                            style={{
+                                width: '36px',
+                                height: '36px',
+                                borderRadius: '50%',
+                                objectFit: 'cover'
+                            }}
+                        />
                         <span>Hanuman Chalisa</span>
                     </a>
 

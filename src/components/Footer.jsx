@@ -4,7 +4,17 @@ export default function Footer() {
             <div className="container">
                 <div className="footer__inner">
                     <div className="footer__brand">
-                        🙏 Hanuman Chalisa Official
+                        <img 
+                            src="/logo.png" 
+                            alt="Logo"
+                            style={{
+                                width: '24px',
+                                height: '24px',
+                                borderRadius: '50%',
+                                objectFit: 'cover'
+                            }}
+                        />
+                        <span>Hanuman Chalisa Official</span>
                     </div>
 
                     <ul className="footer__links">
