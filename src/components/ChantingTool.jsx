@@ -75,6 +75,7 @@ export default function ChantingTool() {
     const [streakData, setStreakData] = useState(getStreakData)
     const [isPressed, setIsPressed] = useState(false)
     const tapButtonRef = useRef(null)
+    const touchHandledRef = useRef(false)
 
     // Mala counter with enhanced feedback
     const handleTap = useCallback(() => {
@@ -131,12 +132,26 @@ export default function ChantingTool() {
     // Handle touch events for better mobile experience
     const handleTouchStart = (e) => {
         e.preventDefault()
+        touchHandledRef.current = true
         setIsPressed(true)
         handleTap()
     }
 
     const handleTouchEnd = () => {
         setIsPressed(false)
+        // Reset touch flag after a short delay to allow click to be ignored
+        setTimeout(() => {
+            touchHandledRef.current = false
+        }, 100)
+    }
+
+    // Handle click - but skip if touch was already handled
+    const handleClick = (e) => {
+        if (touchHandledRef.current) {
+            // Touch already handled this interaction, skip click
+            return
+        }
+        handleTap()
     }
 
     const resetMala = () => {
@@ -248,7 +263,7 @@ export default function ChantingTool() {
                         <button
                             ref={tapButtonRef}
                             className={`mala__tap-btn ${count >= 108 ? 'complete' : ''} ${isPressed ? 'pressed' : ''}`}
-                            onClick={handleTap}
+                            onClick={handleClick}
                             onTouchStart={handleTouchStart}
                             onTouchEnd={handleTouchEnd}
                             disabled={count >= 108}
